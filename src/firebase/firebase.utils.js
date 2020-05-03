@@ -1,52 +1,49 @@
-import firebase from 'firebase/app'
-import 'firebase/firestore'
-import 'firebase/auth'
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+import 'firebase/auth';
 
 const config = {
-    apiKey: "AIzaSyBRhmbtL-NZAzMRpgzMkXAX1LQIaWyacXc",
-    authDomain: "e-commerce-platform-db.firebaseapp.com",
-    databaseURL: "https://e-commerce-platform-db.firebaseio.com",
-    projectId: "e-commerce-platform-db",
-    storageBucket: "e-commerce-platform-db.appspot.com",
-    messagingSenderId: "1097584814160",
-    appId: "1:1097584814160:web:414f53b1db50a15dd0c955",
-    measurementId: "G-P2DZSM2XLH"
-  }
+  apiKey: 'AIzaSyCdHT-AYHXjF7wOrfAchX4PIm3cSj5tn14',
+  authDomain: 'crwn-db.firebaseapp.com',
+  databaseURL: 'https://crwn-db.firebaseio.com',
+  projectId: 'crwn-db',
+  storageBucket: 'crwn-db.appspot.com',
+  messagingSenderId: '850995411664',
+  appId: '1:850995411664:web:7ddc01d597846f65'
+};
 
+firebase.initializeApp(config);
 
 export const createUserProfileDocument = async (userAuth, additionalData) => {
-  if(!userAuth) return;
+  if (!userAuth) return;
 
   const userRef = firestore.doc(`users/${userAuth.uid}`);
+
   const snapShot = await userRef.get();
-  console.log(snapShot);
 
-  if (!snapShot.exists){
-    const {displayName, email} = userAuth;
+  if (!snapShot.exists) {
+    const { displayName, email } = userAuth;
     const createdAt = new Date();
-
-    try{
+    try {
       await userRef.set({
         displayName,
         email,
         createdAt,
         ...additionalData
-      })
-    }catch(error){
-      console.log('error creating user',error.message)
+      });
+    } catch (error) {
+      console.log('error creating user', error.message);
     }
-    
   }
-  return userRef;
-}
 
-firebase.initializeApp(config);
+  return userRef;
+};
 
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 
 const provider = new firebase.auth.GoogleAuthProvider();
-provider.setCustomParameters({prompt: 'select_account'});
+provider.setCustomParameters({ prompt: 'select_account' });
 export const signInWithGoogle = () => auth.signInWithPopup(provider);
 
 export default firebase;
